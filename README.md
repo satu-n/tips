@@ -68,6 +68,13 @@ alias dfl='docker_images_filter_by_label_ref' # myfunc
 alias dtl='docker_tag_by_label_ref' # myfunc
 ```
 
-See [snip](snip) shell script of the same name for `# myfunc`.
+For `# myfunc`, see the [snip](snip) shell script with the same name.
 
+If you want to use your own function like this, don't forget to add it to `~/.bashrc` as follows:
+
+```bash
+. ~/docs/tips/snip/.bashrc.hub.sh
+```
+
+<!-- Thank you for reading! -->
 __Thank you for reading!__
