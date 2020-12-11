@@ -4,6 +4,8 @@
   - [git branch at bash prompt](#git-branch-at-bash-prompt)
   - [tagging docker intermediate images](#tagging-docker-intermediate-images)
   - [docker command aliases](#docker-command-aliases)
+  - [bash prompt in docker container](#bash-prompt-in-docker-container)
+    - [Solution:](#solution)
 
 ## git branch at bash prompt
 
@@ -75,6 +77,43 @@ If you want to use your own function like this, don't forget to add it to `~/.ba
 ```bash
 . ~/docs/tips/snip/.bashrc.hub.sh
 ```
+
+## bash prompt in docker container
+
+Here is 2 way to interact with a running container:
+
+* `docker run -it IMAGE COMMAND`
+* `docker exec -it CONTAINER COMMAND`
+
+First, run salmon container of rice image. Then...
+
+![holy_shit_ruin](images/holy_shit_ruin.png)
+
+Holy shit, what a surprising white prompt!
+
+This prompt is the `PS1` itself of `CONTAINER:~/.bashrc`
+
+No matter how many times it is overwritten, it will return to white next time.
+
+Bye, my ephemeral `PS1`...
+
+### Solution:
+
+Add to `CONTAINER:~/.bashrc` and restart `bash`
+
+```bash
+docker run -ite "DOCKER_PS1='$docker_ps1'" {IMAGE} bash -c 'echo "PS1=$DOCKER_PS1" >>~/.bashrc && bash -l'
+```
+
+[Here](snip/docker_run_interactive.sh) is the code I'm actually using, which gives the following result:
+
+![bash_prompt_in_docker_container](images/bash_prompt_in_docker_container.png)
+
+Hello, my pseudo-persistent `PS1`!
+
+Let's look at the container counting down at `run -it` (left) from `exec -it` (right).
+
+![docker_run_exec_interactive](images/docker_run_exec_interactive.gif)
 
 <!-- Thank you for reading! -->
 __Thank you for reading!__
