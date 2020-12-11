@@ -26,15 +26,15 @@ LABEL ref="project_service:tag"
 Then filter images by the label and run `docker tag`:
 
 ```bash
-REF="project_service:tag" \
+REF="project_service:tag" && \
 docker images -f label=ref=$REF -q \
-| head -n 1
+| head -n 1 \
 | xargs -I {} docker tag {} $REF
 ```
 
 All of the above looks like this:
 
-![docker_build_stage_later_tagging](images/tagging_docker_intermediate_images.png)
+![tagging_docker_intermediate_images](images/tagging_docker_intermediate_images.png)
 
 <!-- ## Thank you for reading! -->
 
