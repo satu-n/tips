@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function countdown() {
     if [ $# -ne 1 ]; then
