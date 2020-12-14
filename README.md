@@ -2,7 +2,7 @@
 
 - [tips](#tips)
   - [git branch at bash prompt](#git-branch-at-bash-prompt)
-  - [tagging docker intermediate images](#tagging-docker-intermediate-images)
+  - [tagging docker compose intermediate images](#tagging-docker-compose-intermediate-images)
   - [docker command aliases](#docker-command-aliases)
   - [bash prompt in docker container](#bash-prompt-in-docker-container)
     - [Solution:](#solution)
@@ -15,67 +15,47 @@ Add like `$(__git_ps1 ">%s")` to `PS1` of `~/.bashrc`:
 
 ![git_branch_at_bash_prompt](images/git_branch_at_bash_prompt.png)
 
-## tagging docker intermediate images
+## tagging docker compose intermediate images
 
-To name each build stage as a tagged image,
+To name each intermediate image of a service of a Compose project,
 
-first label it in `Dockerfile`:
+first name each build stage `AS {stage}` in `{project}/{service}/Dockerfile`:
 
 ```Dockerfile
-FROM image AS tag
-LABEL ref="project_service:tag"
+FROM image AS stage
 ```
 
-Then filter images by the label and run `docker tag`:
+Then in `{project}/{service}` dir, build and tag the image targeting `{stage}`.
 
 ```bash
-REF="project_service:tag" && \
-docker images -f label=ref=$REF -q \
-| head -n 1 \
-| xargs -I {} docker tag {} $REF
+docker build . -t $(basename $(dirname $(pwd)))_$(basename $(pwd)):{stage} --target {stage}
 ```
 
-All of the above looks like this:
+The image will be tagged as `{project}_{service}:{stage}`.
 
-![tagging_docker_intermediate_images](images/tagging_docker_intermediate_images.png)
+![tagging_docker_compose_intermediate_images](images/tagging_docker_compose_intermediate_images.png)
 
 <!-- ## Thank you for reading! -->
 
 ## docker command aliases
 
-Add to `~/.bash_aliases` as follows:
+[Here](snip/.bash_aliases/docker.sh)
+is my docker aliases.
+
+Don't forget to add to `~/.bash_aliases` as follows:
 
 ```bash
-alias d='docker'
-alias db='docker build -q .'
-alias dr='docker run --rm $(docker build -q .)'
-alias dri='docker_run_interactive $(docker build -q .)' # myfunc
-alias dri_='docker_run_interactive' # myfunc
-alias dl='docker logs -f'
-alias dx='docker exec'
-alias dxi_='docker_exec_interactive' # myfunc
-
-alias dc='docker-compose'
-alias dcb='docker-compose build'
-alias dcr='docker-compose run --rm'
-# alias dcu='docker-compose up -d'
-alias dcl='docker-compose logs -f'
-alias dcx='docker-compose exec'
-# alias dcd='docker-compose down'
-
-alias img='docker image'
-alias ctn='docker container'
-
-alias dfl='docker_images_filter_by_label_ref' # myfunc
-alias dtl='docker_tag_by_label_ref' # myfunc
+readonly BASH_ALIASES_DIR="**/tips/snip/.bash_aliases"
+. ${BASH_ALIASES_DIR}/.hub.sh
 ```
 
-For `# myfunc`, see the [snip](snip) shell script with the same name.
+For `# myfunc`, see the script of the same name [here](snip/.bashrc)
 
-If you want to use your own function like this, don't forget to add it to `~/.bashrc` as follows:
+If you want to use your own function like this, don't forget to add to `~/.bashrc` as follows:
 
 ```bash
-. ~/docs/tips/snip/.bashrc.hub.sh
+readonly BASHRC_EXTENSION_DIR="**/tips/snip/.bashrc"
+. ${BASHRC_EXTENSION_DIR}/.hub.sh
 ```
 
 ## bash prompt in docker container
@@ -105,7 +85,7 @@ Add to `CONTAINER:~/.bashrc` and restart `bash`
 docker run -ite "DOCKER_PS1='$docker_ps1'" {IMAGE} bash -c 'echo "PS1=$DOCKER_PS1" >>~/.bashrc && bash -l'
 ```
 
-[Here](snip/docker_run_interactive.sh) is the code I'm actually using, which gives the following result:
+[Here](snip/.bashrc/docker_run_interactive.sh) is the code I'm actually using, which gives the following result:
 
 ![bash_prompt_in_docker_container](images/bash_prompt_in_docker_container.png)
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-. ~/docs/tips/snip/valid_num_args.sh
-. ~/docs/tips/snip/docker_ps1.sh
+. ${here}/valid_num_args.sh
+. ${here}/docker_ps1.sh
 
 function docker_exec_interactive() {
   valid_num_args $# 1

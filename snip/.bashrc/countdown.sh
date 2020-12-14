@@ -1,9 +1,9 @@
 #!/bin/bash
 
+. ${here}/valid_num_args.sh
+
 function countdown() {
-    if [ $# -ne 1 ]; then
-      return 1
-    fi
+    valid_num_args $# 1
     local remain=$1
     while [ $remain -ge 0 ]; do
         echo "$((remain--))" >countdown.out
