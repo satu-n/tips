@@ -35,6 +35,8 @@ The image will be tagged as `{project}_{service}:{stage}`.
 
 ![tagging_docker_compose_intermediate_images](images/tagging_docker_compose_intermediate_images.png)
 
+For alias `dbt`, see [here](#docker-command-aliases).
+
 <!-- ## Thank you for reading! -->
 
 ## docker command aliases
@@ -42,20 +44,18 @@ The image will be tagged as `{project}_{service}:{stage}`.
 [Here](snip/.bash_aliases/docker.sh)
 is my docker aliases.
 
-Don't forget to add to `~/.bash_aliases` as follows:
+To use this, add to `~/.bash_aliases` as follows:
 
 ```bash
-readonly BASH_ALIASES_DIR="**/tips/snip/.bash_aliases"
-. ${BASH_ALIASES_DIR}/.hub.sh
+. {}/tips/snip/.bash_aliases/.hub.sh
 ```
 
-For `# myfunc`, see the script of the same name [here](snip/.bashrc)
+For `# myfunc`, see the script of the same name [here](snip/.bashrc).
 
 If you want to use your own function like this, don't forget to add to `~/.bashrc` as follows:
 
 ```bash
-readonly BASHRC_EXTENSION_DIR="**/tips/snip/.bashrc"
-. ${BASHRC_EXTENSION_DIR}/.hub.sh
+. {}/tips/snip/.bashrc/.hub.sh
 ```
 
 ## bash prompt in docker container
@@ -91,9 +91,10 @@ docker run -ite "DOCKER_PS1='$docker_ps1'" {IMAGE} bash -c 'echo "PS1=$DOCKER_PS
 
 Hello, my pseudo-persistent `PS1`!
 
-Let's look at the container counting down at `run -it` (left) from `exec -it` (right).
+Let's look at the container counting down on `run -it` (left) from `exec -it` (right).
 
 ![docker_run_exec_interactive](images/docker_run_exec_interactive.gif)
 
 <!-- Thank you for reading! -->
+
 __Thank you for reading!__

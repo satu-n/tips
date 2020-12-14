@@ -1,4 +1,4 @@
 #!/bin/bash
 
-here=$BASH_ALIASES_DIR
+here="$(dirname ${BASH_SOURCE})"
 . ${here}/docker.sh
