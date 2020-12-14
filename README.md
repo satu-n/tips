@@ -71,7 +71,7 @@ First, run salmon container of rice image. Then...
 
 Holy shit, what a surprising white prompt!
 
-This prompt is the `PS1` itself of `CONTAINER:~/.bashrc`
+This prompt is the `PS1` itself of `CONTAINER:~/.bashrc`.
 
 No matter how many times it is overwritten, it will return to white next time.
 
@@ -79,7 +79,7 @@ Bye, my ephemeral `PS1`...
 
 ### Solution:
 
-Add to `CONTAINER:~/.bashrc` and restart `bash`
+Add to `CONTAINER:~/.bashrc` and restart `bash`:
 
 ```bash
 docker run -ite "DOCKER_PS1='$docker_ps1'" {IMAGE} bash -c 'echo "PS1=$DOCKER_PS1" >>~/.bashrc && bash -l'
