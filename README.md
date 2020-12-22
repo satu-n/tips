@@ -6,6 +6,7 @@
   - [docker command aliases](#docker-command-aliases)
   - [bash prompt in docker container](#bash-prompt-in-docker-container)
     - [Solution:](#solution)
+  - [serde and diesel derive attributes](#serde-and-diesel-derive-attributes)
 
 ## git branch at bash prompt
 
@@ -94,6 +95,26 @@ Hello, my pseudo-persistent `PS1`!
 Let's look at the container counting down on `run -it` (left) from `exec -it` (right).
 
 ![docker_run_exec_interactive](images/docker_run_exec_interactive.gif)
+
+## serde and diesel derive attributes
+
+actix-web API and DB peripherals, that is, serde and diesel __derive attributes__ are:
+
+* serde
+    - __Ser__ ialize
+    - __De__ serialize
+* diesel
+    - Insertable
+    - Queryable
+    - Identifiable
+    - AsChangeset
+
+If used correctly, it could prevent the following:
+
+* Accidentally send x to the outside
+* Accidentally update x
+
+![serde_and_diesel_derive_attributes](images/serde_and_diesel_derive_attributes.jpg)
 
 <!-- Thank you for reading! -->
 
