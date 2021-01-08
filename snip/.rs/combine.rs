@@ -1,9 +1,9 @@
-use combine::*;
+use combine::{
+    Stream, choice, eof, from_str,
+    many1, parser, satisfy, skip_many1, token,
+};
 use combine::parser::{
-    char::{digit, space, spaces},
-    choice::Optional,
-    combinator::Try,
-    sequence::With,
+    char::{digit, space},
 };
 
 #[derive(Debug, Default, Eq, PartialEq)]
@@ -15,26 +15,25 @@ struct Condition {
 parser! {
     fn a_condition[Input]()(Input) -> Condition
     where [ Input: Stream<Token = char> ] {
-        let opt: fn() -> Optional<Try<With<_, With<_, self::a_condition<Input>>>>>
-        = || optional(attempt(
-            space().with(spaces().with(a_condition()))
+        let opt = || choice((
+            eof().map(|_| Condition::default()),
+            a_spaces1().with(a_condition()),
         ));
         choice((
-            token('#').with(a_decimal()).and(opt()).map(|(id, opt)| {
-                let mut condition = opt.unwrap_or_default();
-                condition.id = Some(id);
-                condition
+            opt(),
+            token('#').with(a_non_nega_i()).and(opt()).map(|(i, mut opt)| {
+                opt.id = Some(i);
+                opt
             }),
-            a_word().and(opt()).map(|(w, opt)| {
-                let mut condition = opt.unwrap_or_default();
-                condition.words.push(w);
-                condition
+            a_word().and(opt()).map(|(w, mut opt)| {
+                opt.words.push(w);
+                opt
             }),
         ))
     }
 }
 parser! {
-    fn a_decimal[Input]()(Input) -> i32
+    fn a_non_nega_i[Input]()(Input) -> i32
     where [ Input: Stream<Token = char> ] {
         from_str(many1::<String, _, _>(digit()))
     }
@@ -45,37 +44,34 @@ parser! {
         many1(satisfy(|c: char| !c.is_whitespace() && !c.is_control()))
     }
 }
+parser! {
+    fn a_spaces1[Input]()(Input) -> ()
+    where [ Input: Stream<Token = char> ] {
+        skip_many1(space())
+    }
+}
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use combine::EasyParser;
 
     #[test]
-    fn t_a_condition_ok() {
+    fn t_a_condition() {
         let trial = a_condition().easy_parse(
-            "cool\n#3 #55  \r\n simple\r\n\r\n\n\n\r  #777 beautiful   \r     "
+            "\n   cool   #3 #55 \r\n simple   \n   #777 beautiful   \n   "
         );
-        let expect = Ok((
+        assert_eq!(trial, Ok((
             Condition {
                 id: Some(3),
-                words: vec!["beautiful", "simple", "cool"].iter().map(|s| s.to_string()).collect(),
-            },
-            "   \r     "
-        ));
-        assert_eq!(trial, expect);
-    }
-    #[test]
-    fn t_a_condition_err_10() {
-        let trial = a_condition().easy_parse(
-            " cool"
+                words: vec![
+                    String::from("beautiful"),
+                    String::from("simple"),
+                    String::from("cool"),
+                    ],
+                },
+                ""
+            ))
         );
-        assert!(trial.is_err());
-    }
-    #[test]
-    fn t_a_condition_err_20() {
-        let trial = a_condition().easy_parse(
-            "#\n777"
-        );
-        assert!(trial.is_err());
     }
 }
