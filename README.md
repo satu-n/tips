@@ -7,7 +7,7 @@
   - [bash prompt in docker container](#bash-prompt-in-docker-container)
     - [Solution:](#solution)
   - [serde and diesel derive attributes](#serde-and-diesel-derive-attributes)
-  - [recursive parser in combine](#recursive-parser-in-combine)
+  - [fragment collection parser in `combine`](#fragment-collection-parser-in-combine)
 
 ## git branch at bash prompt
 
@@ -117,9 +117,9 @@ If used correctly, it could prevent the following:
 
 ![serde_and_diesel_derive_attributes](images/serde_and_diesel_derive_attributes.jpg)
 
-## recursive parser in combine
+## fragment collection parser in `combine`
 
-A parser that calls itself and rewrites the output.
+A parser that combines pieces of information into a single `struct`
 
 [Here](snip/.rs/combine.rs) is snip.
 
